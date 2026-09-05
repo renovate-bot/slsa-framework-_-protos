@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: Copyright 2026 The SLSA Authors
+# SPDX-License-Identifier: Apache-2.0
+version: v2
+managed:
+  enabled: false
+plugins:
+  # Output paths are derived from each file's go_package option with the module
+  # prefix stripped, so the generated Go lands at the repo root, e.g.
+  # github.com/slsa-framework/protos/build/v1 -> build/v1/predicate.pb.go.
+  - local: protoc-gen-go
+    out: .
+    opt:
+      - module=github.com/slsa-framework/protos
+inputs:
+  # Only our predicates are generated; the upstream in-toto protos under
+  # third_party/ resolve the imports and the generated code uses the
+  # upstream Go types from github.com/in-toto/attestation/go/v1.
+  - directory: proto

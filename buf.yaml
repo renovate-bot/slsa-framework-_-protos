@@ -1,0 +1,24 @@
+# SPDX-FileCopyrightText: Copyright 2026 The SLSA Authors
+# SPDX-License-Identifier: Apache-2.0
+version: v2
+modules:
+  - path: proto
+  # Upstream in-toto protos, fetched from the go.mod-pinned Go module by
+  # `make proto-deps` (gitignored). Needed to resolve the in_toto_attestation
+  # imports; never generated or linted here.
+  - path: third_party/proto
+lint:
+  use:
+    - STANDARD
+  ignore:
+    - third_party/proto
+  except:
+    # build/v0.2 predates the proto package version-suffix convention.
+    - PACKAGE_VERSION_SUFFIX
+    # Proto packages (slsa.predicates.*) intentionally differ from the on-disk
+    # directory layout (build/, vsa/, sourcetool/) that drives the Go import
+    # paths.
+    - PACKAGE_DIRECTORY_MATCH
+breaking:
+  use:
+    - FILE
